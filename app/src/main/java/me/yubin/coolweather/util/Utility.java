@@ -2,6 +2,8 @@ package me.yubin.coolweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import me.yubin.coolweather.db.City;
 import me.yubin.coolweather.db.County;
 import me.yubin.coolweather.db.Province;
+import me.yubin.coolweather.gson.Weather;
 
 /**
  * Created by yubin on 2018/1/22.
@@ -81,5 +84,20 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    /*
+      Decode the weather json data
+     */
+    public static Weather handleWeatherResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent, Weather.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
